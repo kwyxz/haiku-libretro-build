@@ -75,9 +75,9 @@ clean_tmp
 
 grep -v ^\# "$1" > /tmp/libretro_cores.list
 
+cd "$HP_PATH"
 init_git "libretro-cores-update"
 
-cd "$HP_PATH"
 while IFS= read -r COREFOLDER
 do
 

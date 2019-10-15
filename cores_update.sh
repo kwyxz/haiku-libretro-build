@@ -121,6 +121,7 @@ do
       echo "FAILED: $HP_CORE" >> /tmp/core-updates.log
       delete_git "$HP_CORE_NAME" "libretro-cores-update"
     fi
-    push_git "libretro-cores-update"
   fi
 done < /tmp/libretro_cores.list
+
+push_git "libretro-cores-update"

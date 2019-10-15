@@ -12,6 +12,7 @@ games-emulation/bsnes_libretro:bsnes-libretro
 games-emulation/dosbox_libretro:dosbox-libretro
 games-emulation/fbneo_libretro:FBNeo
 games-emulation/fceumm_libretro:libretro-fceumm
+games-emulation/flycast_libretro:flycast
 games-emulation/freeintv_libretro:FreeIntv
 games-emulation/gambatte_libretro:gambatte-libretro
 games-emulation/gearboy_libretro:Gearboy
@@ -33,12 +34,11 @@ games-emulation/mednafen_wswan_libretro:beetle-wswan-libretro
 games-emulation/melonds_libretro:melonDS
 games-emulation/meteor_libretro:meteor-libretro
 games-emulation/mgba_libretro:mgba
-### games-emulation/mupen64plus_libretro:mupen64plus-libretro-nx
+# games-emulation/mupen64plus_libretro:mupen64plus-libretro-nx
 games-emulation/nestopia_libretro:nestopia
 games-emulation/o2em_libretro:libretro-o2em
 games-emulation/pcsx_rearmed_libretro:pcsx_rearmed
 games-emulation/picodrive_libretro:picodrive
-games-emulation/reicast_libretro:flycast
 games-emulation/retroarch-assets:retroarch-assets
 games-emulation/snes9x_libretro:snes9x
 games-emulation/stella_libretro:stella2014-libretro

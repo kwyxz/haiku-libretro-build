@@ -14,9 +14,17 @@ clean_tmp () {
 }
 
 init_git () {
+  git checkout master
+  git push origin --delete "$1"
+  git branch -D "$1"
+  git checkout -b "$1"
+  git push origin "$1"
+}
+
+create_git () {
   # remove pre-existing branch and create new one
   echo -e "\033[32mCreating branch\e[0m $1"
-  git checkout master
+  git checkout "$2"
   git branch -D "$1"
   git checkout -b "$1"
 }
@@ -24,16 +32,23 @@ init_git () {
 delete_git () {
   echo -e "\033[31mDeleting branch\e[0m $1"
   git commit -a -m "FAIL"
-  git checkout master
+  git checkout "$2"
   git branch -D "$1"
 }
 
-push_git () {
-  # commit changes and push
-  echo -e "\033[32mCommitting and pushing branch\e[0m $1"
+merge_git () {
+  # merge changes
+  echo -e "\033[32mMerging into main dev branch\e[0m $1"
   git commit -a -m "$1: bumped to version $2"
-  git push --set-upstream origin "$1"
-  git checkout master
+  git checkout "$3"
+  git merge --squash "$1"
+}
+
+push_git () {
+  # push changes
+  git checkout "$1"
+  git commit -a -m "Multiple updates to libretro cores"
+  git push origin "$1"
 }
 
 pull_json () {
@@ -60,9 +75,12 @@ clean_tmp
 
 grep -v ^\# "$1" > /tmp/libretro_cores.list
 
+init_git "libretro-cores-update"
+
 cd "$HP_PATH"
 while IFS= read -r COREFOLDER
 do
+
   HP_CORE=$(echo "$COREFOLDER" | cut -d ':' -f 1)
   HP_CORE_NAME=$(echo "$HP_CORE" | cut -d '/' -f 2)
   HP_CORE_FOLDER=$(echo "$HP_PATH"/"$HP_CORE")
@@ -84,7 +102,7 @@ do
   then
     echo -e "\033[33mNo need to update core\e[0m $GH_CORE."
   else
-    init_git "$HP_CORE_NAME"
+    create_git "$HP_CORE_NAME" "libretro-cores-update"
     echo -e "\033[32mUpdating core\e[0m $GH_CORE"
     mkdir -p "$HP_CORE_DL"
     wget "https://github.com/libretro/$GH_CORE/archive/$GH_COMMIT.tar.gz" -O "$HP_CORE_ARCHIVE"
@@ -98,10 +116,11 @@ do
     if [ -f "$HP_PATH/packages/$HP_CORE_PACKAGE-1-x86_64.hpkg" ]
     then
       echo "SUCCESS: $HP_CORE bumped to $HP_VERSION:$GH_DATE" >> /tmp/core-updates.log
-      push_git "$HP_CORE_NAME" "$HP_VERSION:$GH_DATE"
+      merge_git "$HP_CORE_NAME" "$HP_VERSION:$GH_DATE" "libretro-cores-update"
     else
       echo "FAILED: $HP_CORE" >> /tmp/core-updates.log
-      delete_git "$HP_CORE_NAME"
+      delete_git "$HP_CORE_NAME" "libretro-cores-update"
     fi
+    push_git "libretro-cores-update"
   fi
 done < /tmp/libretro_cores.list

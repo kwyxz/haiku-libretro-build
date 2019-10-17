@@ -11,6 +11,7 @@ clean_tmp () {
   rm -f /tmp/_curl_git_*
   rm -f /tmp/core-updates.log
   rm -f /tmp/libretro_cores.list
+  rm -f /tmp/merges.log
 }
 
 init_git () {
@@ -41,7 +42,8 @@ merge_git () {
   echo -e "\033[32mMerging into main dev branch\e[0m $1"
   git commit -a -m "$1: bumped to version $2"
   git checkout "$3"
-  git merge --squash "$1"
+  git merge "$1"
+#  git merge --squash "$1"
 }
 
 push_git () {
@@ -54,7 +56,7 @@ push_git () {
 pull_json () {
   # pull JSON for latest commit
   echo -e "\033[32mPulling JSON for\e[0m $1"
-  curl -k -H "Content-type: application/json" -s "https://api.github.com/repos/libretro/$1/commits/refs/heads/master" -o "$2"
+  curl -u "$GH_USER:$GH_PASS" -k -H "Content-type: application/json" -s "https://api.github.com/repos/libretro/$1/commits/refs/heads/master" -o "$2"
 }
 
 build_package () {
@@ -65,6 +67,12 @@ build_package () {
 
 HP_PATH="/boot/home/haikuports"
 RUNDIR=$(pwd)
+
+# a github_auth file is necessary in this folder to identify to 
+# GitHub and its contents should be :
+# GH_USER=<username>
+# GH_PASS=<password>
+source "$RUNDIR/github_auth"
 
 if [ -z "$1" ]
 then
@@ -112,16 +120,15 @@ do
     sed -i -e s/^srcGitRev=\".*\"/srcGitRev=\"$GH_COMMIT\"/ "$HP_RECIPE"
     git mv "$HP_RECIPE" "$HP_CORE_FOLDER"/"$HP_CORE_PACKAGE".recipe
     build_package "$HP_CORE_NAME"
-    echo PACKAGE = "$HP_PATH/packages/$HP_CORE_PACKAGE-1-x86_64.pkg"
     if [ -f "$HP_PATH/packages/$HP_CORE_PACKAGE-1-x86_64.hpkg" ]
     then
-      echo "SUCCESS: $HP_CORE bumped to $HP_VERSION:$GH_DATE" >> /tmp/core-updates.log
+      echo -e "\033[32mSUCCESS:\e[0m $HP_CORE bumped to $HP_VERSION:$GH_DATE" >> /tmp/core-updates.log
       merge_git "$HP_CORE_NAME" "$HP_VERSION:$GH_DATE" "libretro-cores-update"
     else
-      echo "FAILED: $HP_CORE" >> /tmp/core-updates.log
+      echo "\033[33mFAILED:\e[0m $HP_CORE" >> /tmp/core-updates.log
       delete_git "$HP_CORE_NAME" "libretro-cores-update"
     fi
   fi
 done < /tmp/libretro_cores.list
 
-push_git "libretro-cores-update"
+# push_git "libretro-cores-update"

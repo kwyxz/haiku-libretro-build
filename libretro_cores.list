@@ -7,12 +7,12 @@ app-emulation/fuse_libretro:fuse-libretro
 app-emulation/hatari_libretro:hatari
 app-emulation/nekop2_libretro:libretro-meowPC98
 games-arcade/mrboom_libretro:mrboom-libretro
-# games-emulation/4do_libretro:4do-libretro
+games-emulation/4do_libretro:4do-libretro
 games-emulation/bsnes_libretro:bsnes-libretro
 games-emulation/dosbox_libretro:dosbox-libretro
 games-emulation/fbneo_libretro:FBNeo
 games-emulation/fceumm_libretro:libretro-fceumm
-# games-emulation/flycast_libretro:flycast
+games-emulation/flycast_libretro:flycast
 games-emulation/freeintv_libretro:FreeIntv
 games-emulation/gambatte_libretro:gambatte-libretro
 games-emulation/gearboy_libretro:Gearboy
@@ -45,12 +45,12 @@ games-emulation/stella_libretro:stella2014-libretro
 games-emulation/vba_next_libretro:vba-next
 games-emulation/vecx_libretro:libretro-vecx
 games-emulation/virtualjaguar_libretro:virtualjaguar-libretro
-# games-engines/3dengine_libretro:libretro-3dengine
+games-engines/3dengine_libretro:libretro-3dengine
 games-engines/easyrpg_libretro:easyrpg-libretro
 games-engines/openlara_libretro:OpenLara
 games-engines/reminiscence_libretro:REminiscence
 games-engines/scummvm_libretro:scummvm
 games-fps/tyrquake_libretro:tyrquake
 games-misc/craft_libretro:Craft
-# games-puzzle/2048_libretro:libretro-2048
+games-puzzle/2048_libretro:libretro-2048
 media-sound/gme_libretro:libretro-gme

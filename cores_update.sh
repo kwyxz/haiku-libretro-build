@@ -9,9 +9,7 @@ die () {
 clean_tmp () {
   echo -e "\033[32mCleaning\e[0m /tmp"
   rm -f /tmp/_curl_git_*
-  rm -f /tmp/core-updates.log
-  rm -f /tmp/libretro_cores.list
-  rm -f /tmp/merges.log
+  rm -f /tmp/*.list
 }
 
 init_git () {
@@ -79,12 +77,14 @@ then
   die "no list argument given"
 fi
 
+BRANCH_NAME=$(basename $1 .list)
+
 clean_tmp
 
-grep -v ^\# "$1" > /tmp/libretro_cores.list
+grep -v ^\# "$1" > "/tmp/$BRANCH_NAME.list"
 
 cd "$HP_PATH"
-init_git "libretro-cores-update"
+init_git "$BRANCH_NAME"
 
 while IFS= read -r COREFOLDER
 do
@@ -110,7 +110,7 @@ do
   then
     echo -e "\033[33mNo need to update core\e[0m $GH_CORE."
   else
-    create_git "$HP_CORE_NAME" "libretro-cores-update"
+    create_git "$HP_CORE_NAME" "$BRANCH_NAME"
     echo -e "\033[32mUpdating core\e[0m $GH_CORE"
     mkdir -p "$HP_CORE_DL"
     wget "https://github.com/libretro/$GH_CORE/archive/$GH_COMMIT.tar.gz" -O "$HP_CORE_ARCHIVE"
@@ -118,17 +118,23 @@ do
     sed -i -e s/^REVISION=\".\"/REVISION=\"1\"/ "$HP_RECIPE"
     sed -i -e s/^CHECKSUM_SHA256=\".*\"/CHECKSUM_SHA256=\"$GH_SHA256SUM\"/ "$HP_RECIPE"
     sed -i -e s/^srcGitRev=\".*\"/srcGitRev=\"$GH_COMMIT\"/ "$HP_RECIPE"
-    git mv "$HP_RECIPE" "$HP_CORE_FOLDER"/"$HP_CORE_PACKAGE".recipe
+    git mv "$HP_RECIPE" "$HP_CORE_FOLDER/$HP_CORE_PACKAGE.recipe"
+    if [ -d "$HP_CORE_FOLDER/patches" ];
+    then
+      HP_PATCHFILE=$(ls -1 "$HP_CORE_FOLDER"/patches/*.patchset)
+      git mv "$HP_PATCHFILE" "$HP_CORE_FOLDER/patches/$HP_CORE_PACKAGE.patchset"
+    fi
     build_package "$HP_CORE_NAME"
     if [ -f "$HP_PATH/packages/$HP_CORE_PACKAGE-1-x86_64.hpkg" ]
     then
-      echo -e "\033[32mSUCCESS:\e[0m $HP_CORE bumped to $HP_VERSION:$GH_DATE" >> /tmp/core-updates.log
-      merge_git "$HP_CORE_NAME" "$HP_VERSION:$GH_DATE" "libretro-cores-update"
+      echo -e "\033[32mSUCCESS:\e[0m $HP_CORE bumped to $HP_VERSION:$GH_DATE" >> "/tmp/$BRANCH_NAME.log"
+      merge_git "$HP_CORE_NAME" "$HP_VERSION:$GH_DATE" "$BRANCH_NAME"
     else
-      echo "\033[33mFAILED:\e[0m $HP_CORE" >> /tmp/core-updates.log
-      delete_git "$HP_CORE_NAME" "libretro-cores-update"
+      echo -e "\033[33mFAILED:\e[0m $HP_CORE" >> "/tmp/$BRANCH_NAME.log"
+      delete_git "$HP_CORE_NAME" "$BRANCH_NAME"
     fi
   fi
-done < /tmp/libretro_cores.list
+done < "/tmp/$BRANCH_NAME.list"
 
-# push_git "libretro-cores-update"
+push_git "$BRANCH_NAME"
+exit 0

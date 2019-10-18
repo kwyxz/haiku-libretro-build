@@ -25,7 +25,7 @@ games-emulation/mednafen_lynx_libretro:beetle-lynx-libretro
 games-emulation/mednafen_ngp_libretro:beetle-ngp-libretro
 games-emulation/mednafen_pce_fast_libretro:beetle-pce-fast-libretro
 games-emulation/mednafen_pcfx_libretro:beetle-pcfx-libretro
-games-emulation/mednafen_psx_hw_libretro:beetle-psx-libretro
+# games-emulation/mednafen_psx_hw_libretro:beetle-psx-libretro
 games-emulation/mednafen_psx_libretro:beetle-psx-libretro
 games-emulation/mednafen_saturn_libretro:beetle-saturn-libretro
 games-emulation/mednafen_supergrafx_libretro:beetle-supergrafx-libretro

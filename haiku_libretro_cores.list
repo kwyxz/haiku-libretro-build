@@ -45,6 +45,7 @@ games-emulation/stella_libretro:stella2014-libretro
 games-emulation/vba_next_libretro:vba-next
 games-emulation/vecx_libretro:libretro-vecx
 games-emulation/virtualjaguar_libretro:virtualjaguar-libretro
+games-emulation/yabause_libretro:yabause
 games-engines/3dengine_libretro:libretro-3dengine
 games-engines/easyrpg_libretro:easyrpg-libretro
 games-engines/openlara_libretro:OpenLara

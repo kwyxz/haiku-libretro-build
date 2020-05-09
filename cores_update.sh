@@ -54,13 +54,14 @@ push_git () {
 pull_json () {
   # pull JSON for latest commit
   echo -e "\033[32mPulling JSON for\e[0m $1"
-  curl -u "$GH_USER:$GH_PASS" -k -H "Content-type: application/json" -s "https://api.github.com/repos/libretro/$1/commits/refs/heads/master" -o "$2"
+  curl -k -H "Authorization: bearer ${GH_TOKEN}" -H "Content-type: application/json" -s "https://api.github.com/repos/libretro/$1/commits/refs/heads/master" -o "$2"
 }
 
 build_package () {
   echo -e "\033[32mBuild package\e[0m $1"
   HP=$(command -v haikuporter)
   $HP -S -j8 --get-dependencies --no-source-packages "$1"
+  test $? -eq 0 || echo "$1" > $RUNDIR/failed_builds.log
 }
 
 HP_PATH="/boot/home/haikuports"
@@ -68,8 +69,7 @@ RUNDIR=$(pwd)
 
 # a github_auth file is necessary in this folder to identify to 
 # GitHub and its contents should be :
-# GH_USER=<username>
-# GH_PASS=<password>
+# GH_TOKEN=<token>
 source "$RUNDIR/github_auth"
 
 if [ -z "$1" ]

@@ -7,7 +7,7 @@ app-emulation/fuse_libretro:fuse-libretro
 app-emulation/hatari_libretro:hatari
 app-emulation/nekop2_libretro:libretro-meowPC98
 games-arcade/mrboom_libretro:mrboom-libretro
-games-emulation/4do_libretro:4do-libretro
+games-emulation/opera_libretro:opera-libretro
 games-emulation/bsnes_libretro:bsnes-libretro
 games-emulation/dosbox_libretro:dosbox-libretro
 games-emulation/fbneo_libretro:FBNeo

@@ -61,7 +61,7 @@ build_package () {
   echo -e "\033[32mBuild package\e[0m $1"
   HP=$(command -v haikuporter)
   $HP -S -j8 --get-dependencies --no-source-packages "$1"
-  test $? -eq 0 || echo "$1" > $RUNDIR/failed_builds.log
+  test $? -eq 0 || echo "$1" >> $RUNDIR/failed_builds.log
 }
 
 HP_PATH="/boot/home/haikuports"
@@ -80,6 +80,7 @@ fi
 BRANCH_NAME=$(basename $1 .list)
 
 clean_tmp
+rm $RUNDIR/failed_builds.log
 
 grep -v ^\# "$1" > "/tmp/$BRANCH_NAME.list"
 
@@ -130,6 +131,7 @@ do
     then
       echo -e "\033[32mSUCCESS:\e[0m $HP_CORE bumped to $HP_VERSION:$GH_DATE" >> "/tmp/$BRANCH_NAME.log"
       merge_git "$HP_CORE_NAME" "$HP_VERSION:$GH_DATE" "$BRANCH_NAME"
+      delete_git "$HP_CORE_NAME" "$BRANCH_NAME"
     else
       echo -e "\033[33mFAILED:\e[0m $HP_CORE" >> "/tmp/$BRANCH_NAME.log"
       delete_git "$HP_CORE_NAME" "$BRANCH_NAME"

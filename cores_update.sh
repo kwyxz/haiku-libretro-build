@@ -29,10 +29,15 @@ create_git () {
 }
 
 delete_git () {
-  echo -e "\033[31mDeleting branch\e[0m $1"
-  git commit -a -m "FAIL"
+  echo -e "\033[32mDeleting branch\e[0m $1"
   git checkout "$2"
   git branch -D "$1"
+}
+
+fail_git () {
+  echo -e "\033[31mFailing branch\e[0m $1"
+  git commit -a -m "FAIL"
+  git checkout "$2"
 }
 
 merge_git () {
@@ -61,7 +66,7 @@ build_package () {
   echo -e "\033[32mBuild package\e[0m $1"
   HP=$(command -v haikuporter)
   $HP -S -j8 --get-dependencies --no-source-packages "$1"
-  test $? -eq 0 || echo "$1" >> $RUNDIR/failed_builds.log
+  test $? -eq 0 || return 1
 }
 
 HP_PATH="/boot/home/haikuports"
@@ -127,14 +132,14 @@ do
       git mv "$HP_PATCHFILE" "$HP_CORE_FOLDER/patches/$HP_CORE_PACKAGE.patchset"
     fi
     build_package "$HP_CORE_NAME"
-    if [ -f "$HP_PATH/packages/$HP_CORE_PACKAGE-1-x86_64.hpkg" ]
+    if [ $? -eq 0 ]
     then
       echo -e "\033[32mSUCCESS:\e[0m $HP_CORE bumped to $HP_VERSION:$GH_DATE" >> "/tmp/$BRANCH_NAME.log"
       merge_git "$HP_CORE_NAME" "$HP_VERSION:$GH_DATE" "$BRANCH_NAME"
       delete_git "$HP_CORE_NAME" "$BRANCH_NAME"
     else
       echo -e "\033[33mFAILED:\e[0m $HP_CORE" >> "/tmp/$BRANCH_NAME.log"
-      delete_git "$HP_CORE_NAME" "$BRANCH_NAME"
+      fail_git "$HP_CORE_NAME" "$BRANCH_NAME"
     fi
   fi
 done < "/tmp/$BRANCH_NAME.list"

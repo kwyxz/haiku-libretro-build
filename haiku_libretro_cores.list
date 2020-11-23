@@ -42,7 +42,7 @@ games-emulation/opera_libretro:opera-libretro
 games-emulation/parallel_n64_libretro:parallel-n64
 games-emulation/pcsx_rearmed_libretro:pcsx_rearmed
 games-emulation/picodrive_libretro:picodrive
-games-emulation/retroarch-assets:retroarch-assets
+games-emulation/retroarch_assets:retroarch-assets
 games-emulation/snes9x_libretro:snes9x
 games-emulation/stella_libretro:stella2014-libretro
 games-emulation/vba_next_libretro:vba-next

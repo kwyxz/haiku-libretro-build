@@ -85,7 +85,7 @@ fi
 BRANCH_NAME=$(basename $1 .list)
 
 clean_tmp
-rm $RUNDIR/failed_builds.log
+rm $RUNDIR/*.log
 
 grep -v ^\# "$1" > "/tmp/$BRANCH_NAME.list"
 
@@ -134,11 +134,11 @@ do
     build_package "$HP_CORE_NAME"
     if [ $? -eq 0 ]
     then
-      echo -e "\033[32mSUCCESS:\e[0m $HP_CORE bumped to $HP_VERSION:$GH_DATE" >> "/tmp/$BRANCH_NAME.log"
+      echo -e "\033[32mSUCCESS:\e[0m $HP_CORE bumped to $HP_VERSION:$GH_DATE" >> "${RUNDIR}/${BRANCH_NAME}.log"
       merge_git "$HP_CORE_NAME" "$HP_VERSION:$GH_DATE" "$BRANCH_NAME"
       delete_git "$HP_CORE_NAME" "$BRANCH_NAME"
     else
-      echo -e "\033[33mFAILED:\e[0m $HP_CORE" >> "/tmp/$BRANCH_NAME.log"
+      echo -e "\033[33mFAILED:\e[0m $HP_CORE" >> "${RUNDIR}/${BRANCH_NAME}.log"
       fail_git "$HP_CORE_NAME" "$BRANCH_NAME"
     fi
   fi

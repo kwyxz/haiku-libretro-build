@@ -69,16 +69,19 @@ build_package () {
   test $? -eq 0 || return 1
 }
 
+INFO_FOLDER="/boot/home/libretro-super/dist/info"
 HP_PATH="/boot/home/haikuports"
 RUNDIR=$(pwd)
+
+# make sure this is installed
+pkgman install jq
 
 # a github_auth file is necessary in this folder to identify to 
 # GitHub and its contents should be :
 # GH_TOKEN=<token>
 source "$RUNDIR/github_auth"
 
-if [ -z "$1" ]
-then
+if [ -z "$1" ]; then
   die "no list argument given"
 fi
 
@@ -92,8 +95,7 @@ grep -v ^\# "$1" > "/tmp/$BRANCH_NAME.list"
 cd "$HP_PATH"
 init_git "$BRANCH_NAME"
 
-while IFS= read -r COREFOLDER
-do
+while IFS= read -r COREFOLDER; do
 
   HP_CORE=$(echo "$COREFOLDER" | cut -d ':' -f 1)
   HP_CORE_NAME=$(echo "$HP_CORE" | cut -d '/' -f 2)
@@ -112,8 +114,7 @@ do
   HP_CORE_ARCHIVE=$(echo "$HP_CORE_DL/$GH_CORE-$HP_VERSION-$GH_DATE-$GH_COMMIT.tar.gz")
   HP_CORE_PACKAGE=$(echo "$HP_CORE_NAME"-"$HP_VERSION"_"$GH_DATE")
 
-  if [ "$GH_COMMIT" == "$HP_COMMIT" ];
-  then
+  if [ "$GH_COMMIT" == "$HP_COMMIT" ]; then
     echo -e "\033[33mNo need to update core\e[0m $GH_CORE."
   else
     create_git "$HP_CORE_NAME" "$BRANCH_NAME"
@@ -126,14 +127,15 @@ do
     sed -i -e s/^CHECKSUM_SHA256=\".*\"/CHECKSUM_SHA256=\"$GH_SHA256SUM\"/ "$HP_RECIPE"
     sed -i -e s/^srcGitRev=\".*\"/srcGitRev=\"$GH_COMMIT\"/ "$HP_RECIPE"
     git mv "$HP_RECIPE" "$HP_CORE_FOLDER/$HP_CORE_PACKAGE.recipe"
-    if [ -d "$HP_CORE_FOLDER/patches" ];
-    then
+    if [ -d "$HP_CORE_FOLDER/patches" ]; then
       HP_PATCHFILE=$(ls -1 "$HP_CORE_FOLDER"/patches/*.patchset)
       git mv "$HP_PATCHFILE" "$HP_CORE_FOLDER/patches/$HP_CORE_PACKAGE.patchset"
     fi
+    if [ ${HP_CORE_NAME} != "retroarch_assets" ]; then
+      sed -e s/^display_version\ =\ \".*\"/display_version\ =\ \"@DISPLAY_VERSION@\"/ ${INFO_FOLDER}/${HP_CORE_NAME}.info > ${HP_CORE_FOLDER}/additional-files/${HP_CORE_NAME}.info.in
+    fi
     build_package "$HP_CORE_NAME"
-    if [ $? -eq 0 ]
-    then
+    if [ $? -eq 0 ]; then
       echo -e "\033[32mSUCCESS:\e[0m $HP_CORE bumped to $HP_VERSION:$GH_DATE" >> "${RUNDIR}/${BRANCH_NAME}.log"
       merge_git "$HP_CORE_NAME" "$HP_VERSION:$GH_DATE" "$BRANCH_NAME"
       delete_git "$HP_CORE_NAME" "$BRANCH_NAME"

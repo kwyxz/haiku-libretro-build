@@ -44,7 +44,7 @@ games-emulation/pcsx_rearmed_libretro:libretro/pcsx_rearmed
 games-emulation/picodrive_libretro:libretro/picodrive
 games-emulation/retroarch_assets:libretro/retroarch-assets
 games-emulation/snes9x_libretro:libretro/snes9x
-games-emulation/stella_libretro:stella-emu/stella ### needs to be ported from upstream
+games-emulation/stella_libretro:stella-emu/stella
 games-emulation/stella2014_libretro:libretro/stella2014-libretro
 games-emulation/vba_next_libretro:libretro/vba-next
 games-emulation/vecx_libretro:libretro/libretro-vecx

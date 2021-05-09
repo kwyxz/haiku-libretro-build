@@ -59,7 +59,7 @@ push_git () {
 pull_json () {
   # pull JSON for latest commit
   echo -e "\033[32mPulling JSON for\e[0m $1"
-  curl -k -H "Authorization: bearer ${GH_TOKEN}" -H "Content-type: application/json" -s "https://api.github.com/repos/libretro/$1/commits/refs/heads/master" -o "$2"
+  curl -k -H "Authorization: bearer ${GH_TOKEN}" -H "Content-type: application/json" -s "https://api.github.com/repos/$1/commits/refs/heads/master" -o "$2"
 }
 
 build_package () {
@@ -121,7 +121,7 @@ while IFS= read -r COREFOLDER; do
     echo -e "\033[32mUpdating core\e[0m $GH_CORE"
     rm -rf "$HP_CORE_FOLDER/work-*"
     mkdir -p "$HP_CORE_DL"
-    wget "https://github.com/libretro/$GH_CORE/archive/$GH_COMMIT.tar.gz" -O "$HP_CORE_ARCHIVE"
+    wget "https://github.com/$GH_CORE/archive/$GH_COMMIT.tar.gz" -O "$HP_CORE_ARCHIVE"
     GH_SHA256SUM=$(sha256sum "$HP_CORE_ARCHIVE" | awk '{print $1}')
     sed -i -e s/^REVISION=\".\"/REVISION=\"1\"/ "$HP_RECIPE"
     sed -i -e s/^CHECKSUM_SHA256=\".*\"/CHECKSUM_SHA256=\"$GH_SHA256SUM\"/ "$HP_RECIPE"

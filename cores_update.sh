@@ -101,7 +101,8 @@ while IFS= read -r COREFOLDER; do
   HP_CORE_NAME=$(echo "$HP_CORE" | cut -d '/' -f 2)
   HP_CORE_FOLDER=$(echo "$HP_PATH"/"$HP_CORE")
   GH_CORE=$(echo "$COREFOLDER" | cut -d ':' -f 2)
-  GH_JSON="/tmp/_curl_git_$GH_CORE"
+  GH_CORE_STRIPPED=$(echo "$GH_CORE" | cut -d '/' -f2)
+  GH_JSON="/tmp/_curl_git_${GH_CORE_STRIPPED}"
 
   pull_json "$GH_CORE" "$GH_JSON"
 
@@ -111,14 +112,14 @@ while IFS= read -r COREFOLDER; do
   HP_COMMIT=$(grep ^srcGitRev "$HP_CORE_FOLDER"/*.recipe | cut -d '=' -f 2 | tr -d \")
   HP_VERSION=$(basename "$HP_RECIPE" | cut -d '-' -f 2 | cut -d '_' -f 1 | sed -e 's/\.recipe//')
   HP_CORE_DL=$(echo "$HP_CORE_FOLDER/download")
-  HP_CORE_ARCHIVE=$(echo "$HP_CORE_DL/$GH_CORE-$HP_VERSION-$GH_DATE-$GH_COMMIT.tar.gz")
+  HP_CORE_ARCHIVE=$(echo "$HP_CORE_DL/$GH_CORE_STRIPPED-$HP_VERSION-$GH_DATE-$GH_COMMIT.tar.gz")
   HP_CORE_PACKAGE=$(echo "$HP_CORE_NAME"-"$HP_VERSION"_"$GH_DATE")
 
   if [ "$GH_COMMIT" == "$HP_COMMIT" ]; then
-    echo -e "\033[33mNo need to update core\e[0m $GH_CORE."
+    echo -e "\033[33mNo need to update core\e[0m ${GH_CORE_STRIPPED}."
   else
     create_git "$HP_CORE_NAME" "$BRANCH_NAME"
-    echo -e "\033[32mUpdating core\e[0m $GH_CORE"
+    echo -e "\033[32mUpdating core\e[0m $GH_CORE_STRIPPED"
     rm -rf "$HP_CORE_FOLDER/work-*"
     mkdir -p "$HP_CORE_DL"
     wget "https://github.com/$GH_CORE/archive/$GH_COMMIT.tar.gz" -O "$HP_CORE_ARCHIVE"

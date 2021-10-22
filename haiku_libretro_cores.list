@@ -21,7 +21,9 @@ games-emulation/fceumm_libretro:libretro/libretro-fceumm
 games-emulation/flycast_libretro:libretro/flycast
 games-emulation/freeintv_libretro:libretro/FreeIntv
 games-emulation/gambatte_libretro:libretro/gambatte-libretro
-games-emulation/gearboy_libretro:libretro/Gearboy
+games-emulation/gearboy_libretro:drhelius/Gearboy
+games-emulation/gearcoleco_libretro:drhelius/Gearcoleco
+games-emulation/gearsystem_libretro:drhelius/Gearsystem
 games-emulation/genesis_plus_gx_libretro:libretro/Genesis-Plus-GX
 games-emulation/gpsp_libretro:libretro/gpsp
 games-emulation/gw_libretro:libretro/gw-libretro

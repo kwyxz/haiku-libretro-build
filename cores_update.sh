@@ -103,8 +103,9 @@ while IFS= read -r COREFOLDER; do
   GH_CORE=$(echo "$COREFOLDER" | cut -d ':' -f 2)
   GH_CORE_STRIPPED=$(echo "$GH_CORE" | cut -d '/' -f2)
   GH_JSON="/tmp/_curl_git_${GH_CORE_STRIPPED}"
+  GH_BRANCH=$(echo "$COREFOLDER" | cut -d ':' -f 3)
 
-  pull_json "$GH_CORE" "$GH_JSON"
+  pull_json "$GH_CORE" "$GH_JSON" "$GH_BRANCH"
 
   GH_COMMIT=$(jq .sha "$GH_JSON" | tr -d \")
   GH_DATE=$(jq .commit.author.date "$GH_JSON" | cut -d 'T' -f 1 | tr -d "-" | tr -d \")
@@ -127,12 +128,14 @@ while IFS= read -r COREFOLDER; do
     sed -i -e s/^REVISION=\".\"/REVISION=\"1\"/ "$HP_RECIPE"
     sed -i -e s/^CHECKSUM_SHA256=\".*\"/CHECKSUM_SHA256=\"$GH_SHA256SUM\"/ "$HP_RECIPE"
     sed -i -e s/^srcGitRev=\".*\"/srcGitRev=\"$GH_COMMIT\"/ "$HP_RECIPE"
-    git mv "$HP_RECIPE" "$HP_CORE_FOLDER/$HP_CORE_PACKAGE.recipe"
+    # if there is a patch file it needs to be renamed too
     if [ -d "$HP_CORE_FOLDER/patches" ]; then
       HP_PATCHFILE=$(ls -1 "$HP_CORE_FOLDER"/patches/*.patchset)
-      git mv "$HP_PATCHFILE" "$HP_CORE_FOLDER/patches/$HP_CORE_PACKAGE.patchset"
+      git mv "$HP_PATCHFILE" "$HP_CORE_FOLDER/patches/${HP_CORE_PACKAGE}.patchset"
+      sed -i -e s/^PATCHES=\".*\"/PATCHES=\"${HP_CORE_PACKAGE}.patchset\"/ "${HP_RECIPE}"
     fi
-    if [ ${HP_CORE_NAME} != "retroarch_assets" ]; then
+    git mv "$HP_RECIPE" "$HP_CORE_FOLDER/$HP_CORE_PACKAGE.recipe"
+    if [ ${HP_CORE_NAME} != "retroarch_assets" ] && [ -d ${INFO_FOLDER} ]; then
       sed -e s/^display_version\ =\ \".*\"/display_version\ =\ \"@DISPLAY_VERSION@\"/ ${INFO_FOLDER}/${HP_CORE_NAME}.info > ${HP_CORE_FOLDER}/additional-files/${HP_CORE_NAME}.info.in
     fi
     build_package "$HP_CORE_NAME"

@@ -14,7 +14,7 @@ games-emulation/blastem_libretro:libretro/blastem:libretro
 # games-emulation/bsnes_libretro:libretro/bsnes-libretro:master
 games-emulation/desmume_libretro:libretro/desmume:master
 games-emulation/dosbox_libretro:libretro/dosbox-libretro:master
-games-emulation/dosbox_pure_libretro:schellingb/dosbox-pure:master
+games-emulation/dosbox_pure_libretro:schellingb/dosbox-pure:main
 ### games-emulation/duckstation_libretro:libretro/duckstation:master
 games-emulation/fbneo_libretro:libretro/FBNeo:master
 games-emulation/fceumm_libretro:libretro/libretro-fceumm:master

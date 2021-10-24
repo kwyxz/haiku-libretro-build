@@ -59,7 +59,7 @@ push_git () {
 pull_json () {
   # pull JSON for latest commit
   echo -e "\033[32mPulling JSON for\e[0m $1"
-  curl -k -H "Authorization: bearer ${GH_TOKEN}" -H "Content-type: application/json" -s "https://api.github.com/repos/$1/commits/refs/heads/master" -o "$2"
+  curl -k -H "Authorization: bearer ${GH_TOKEN}" -H "Content-type: application/json" -s "https://api.github.com/repos/${1}/commits/refs/heads/${3}" -o "$2"
 }
 
 build_package () {
@@ -101,7 +101,8 @@ while IFS= read -r COREFOLDER; do
   HP_CORE_NAME=$(echo "$HP_CORE" | cut -d '/' -f 2)
   HP_CORE_FOLDER=$(echo "$HP_PATH"/"$HP_CORE")
   GH_CORE=$(echo "$COREFOLDER" | cut -d ':' -f 2)
-  GH_CORE_STRIPPED=$(echo "$GH_CORE" | cut -d '/' -f2)
+  GH_REPO=$(echo "$GH_CORE" | cut -d '/' -f 1)
+  GH_CORE_STRIPPED=$(echo "$GH_CORE" | cut -d '/' -f 2)
   GH_JSON="/tmp/_curl_git_${GH_CORE_STRIPPED}"
   GH_BRANCH=$(echo "$COREFOLDER" | cut -d ':' -f 3)
 
@@ -124,6 +125,7 @@ while IFS= read -r COREFOLDER; do
     rm -rf "$HP_CORE_FOLDER/work-*"
     mkdir -p "$HP_CORE_DL"
     wget "https://github.com/$GH_CORE/archive/$GH_COMMIT.tar.gz" -O "$HP_CORE_ARCHIVE"
+    sed -i -e s/^SOURCE_URI=\".*\"/SOURCE_URI=\"https\:\\/\\/github.com\\/${GH_REPO}\\/${GH_CORE_STRIPPED}\\/archive\\/\$srcGitRev\.tar\.gz\"/ "$HP_RECIPE"
     GH_SHA256SUM=$(sha256sum "$HP_CORE_ARCHIVE" | awk '{print $1}')
     sed -i -e s/^REVISION=\".\"/REVISION=\"1\"/ "$HP_RECIPE"
     sed -i -e s/^CHECKSUM_SHA256=\".*\"/CHECKSUM_SHA256=\"$GH_SHA256SUM\"/ "$HP_RECIPE"

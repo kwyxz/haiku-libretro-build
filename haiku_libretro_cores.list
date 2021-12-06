@@ -11,7 +11,7 @@ app-emulation/puae_libretro:libretro/libretro-uae:master
 games-arcade/mrboom_libretro:libretro/mrboom-libretro:master
 games-arcade/xrick_libretro:libretro/xrick-libretro:master
 games-emulation/blastem_libretro:libretro/blastem:libretro
-# games-emulation/bsnes_libretro:libretro/bsnes-libretro:master
+games-emulation/bsnes_libretro:bsnes-emu/bsnes:master
 games-emulation/desmume_libretro:libretro/desmume:master
 games-emulation/dosbox_libretro:libretro/dosbox-libretro:master
 games-emulation/dosbox_pure_libretro:schellingb/dosbox-pure:main
@@ -63,7 +63,7 @@ games-emulation/vecx_libretro:libretro/libretro-vecx:master
 games-emulation/virtualjaguar_libretro:libretro/virtualjaguar-libretro:master
 games-emulation/yabause_libretro:libretro/yabause:master
 games-engines/3dengine_libretro:libretro/libretro-3dengine:master
-games-engines/cannonball:libretro/cannonball:master
+games-engines/cannonball_libretro:libretro/cannonball:master
 ### games-engines/easyrpg_libretro:libretro/easyrpg-libretro:master
 # games-engines/openlara_libretro:libretro/OpenLara:master
 games-engines/reminiscence_libretro:libretro/REminiscence:master

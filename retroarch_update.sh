@@ -1,6 +1,6 @@
 #!/bin/sh
 
-HP_PATH="/boot/home/haikuports"
+HP_PATH="/boot/home/Code/haikuports"
 RA_HP_PATH="$HP_PATH/games-emulation/retroarch"
 RA_DL_PATH="$RA_HP_PATH/download"
 RA_VERSION=$(curl -s https://api.github.com/repos/libretro/RetroArch/releases/latest | grep "tag_name" | cut -d ':' -f 2 | tr -d \" | tr -d \, | tr -d \v | tr -d ' ')

@@ -70,7 +70,7 @@ build_package () {
 }
 
 INFO_FOLDER="/boot/home/libretro-super/dist/info"
-HP_PATH="/boot/home/haikuports"
+HP_PATH="/boot/home/Code/haikuports"
 RUNDIR=$(pwd)
 
 # make sure this is installed

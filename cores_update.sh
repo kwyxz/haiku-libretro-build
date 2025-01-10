@@ -64,7 +64,7 @@ pull_json () {
 
 build_package () {
   echo -e "\033[32mBuild package\e[0m $1"
-  HP=$(command -v haikuporter)
+  HP="/boot/home/haikuporter/haikuporter"
   $HP -S -j8 --get-dependencies --no-source-packages "$1"
   test $? -eq 0 || return 1
 }

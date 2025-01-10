@@ -65,7 +65,7 @@ games-emulation/yabause_libretro:libretro/yabause:master
 games-engines/3dengine_libretro:libretro/libretro-3dengine:master
 games-engines/cannonball_libretro:libretro/cannonball:master
 ### games-engines/easyrpg_libretro:libretro/easyrpg-libretro:master
-# games-engines/openlara_libretro:libretro/OpenLara:master
+### games-engines/openlara_libretro:libretro/OpenLara:master
 games-engines/reminiscence_libretro:libretro/REminiscence:master
 games-engines/scummvm_libretro:libretro/scummvm:master
 games-fps/tyrquake_libretro:libretro/tyrquake:master
